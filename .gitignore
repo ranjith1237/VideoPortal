@@ -3,3 +3,6 @@
 
 # Ignore Media files
 media/
+
+# Ignore .pyc files
+*.pyc

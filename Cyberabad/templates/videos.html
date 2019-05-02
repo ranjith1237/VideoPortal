@@ -7,14 +7,13 @@
 {% for videofile in allVideos %}
     <a href='/{{ videofile.id }}'>{{ videofile.name }}</a>
         <td>
-          <video width='300' height='300' controls>
-          <source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'>
-          Your browser does not support the video tag.
+          <video  width='300' height='300' controls>
+            <source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'>
+            Your browser does not support the video tag.
           </video>
         </td>
 {% endfor %}
 <br><br>
-
 
 <div class="pagination">
     <span class="step-links">

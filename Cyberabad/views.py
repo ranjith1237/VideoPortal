@@ -28,7 +28,7 @@ def upload_Video(request):
             os.mkdir(thumbnail_path)
             videoFP = os.path.join(settings.BASE_DIR,'media',str(video_Saved.videofile))
             clip = VideoFileClip(videoFP)
-            clip.save_frame(thumbnail_path+"/thumbnail.jpg",t=1.00)
+            clip.save_frame(thumbnail_path+"/thumbnail.jpg",t=(clip.duration)/2)
     context = {
         'form':form
     }
@@ -74,4 +74,3 @@ def display_Video(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % (file_name)
         return response
     return render(request,'video.html',context)
-    

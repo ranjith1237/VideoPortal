@@ -1,13 +1,16 @@
 <!-- templates/registration/login.html -->
 {% extends 'base.html' %}
 
+{% load bootstrap3 %}
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
+<div class="container">
+    <h1>Login</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" value="Login" class="btn btn-default btn-info">
+    </form>
+</div>
 {% endblock %}

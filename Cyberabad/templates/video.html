@@ -6,11 +6,13 @@
 {% comment %} <script src="https://api.html5media.info/1.1.5/ht`ml5media.min.js"></script> {% endcomment %}
 
 {% block content %}
-<a href='/{{ videofile.id }}/'></a>
-<video width='400' height='600' loop controls='true'>
-<source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'>
-Your browser does not support the video tag.
-</video>
+<div>
+  <a href='/{{ videofile.id }}/'></a>
+  <video width='600' height='400' loop controls='true'>
+  <source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'>
+  Your browser does not support the video tag.
+  </video>
+</div>
 
 
 <div data-role="main" class="ui-content">
@@ -22,7 +24,7 @@ Your browser does not support the video tag.
       <label for="price-max">Price:</label>
       <input type="range" name="price-max" id="price-max" value="{{ endTime }}" min="{{ startTime }}" max="{{ endTime }}">
     </div>
-      <input type="submit" data-inline="true" value="Download">
+      <input type="submit" data-inline="true" class="btn btn-info" value="Download">
   </form>
 </div>
 {% endblock %}

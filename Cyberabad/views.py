@@ -36,7 +36,7 @@ def upload_Video(request):
 
 def all_Videos(request):
     allVideos = Video.objects.all()
-    paginator = Paginator(allVideos, 1) # Show 5 videos per page
+    paginator = Paginator(allVideos, 1) # Show 3 videos per page
 
     page = request.GET.get('page')
     page_videos = paginator.get_page(page)
@@ -46,11 +46,10 @@ def all_Videos(request):
     return render(request,'videos.html',context)
 
 def display_Video(request, id):
-    print(request.POST)
+    print("single video id  ",id)
     singleVideo = Video.objects.get(pk=id)
     videoFP = os.path.join(settings.BASE_DIR,'media',str(singleVideo.videofile))
-    print("video folder path  ",videoFP)
-    fExtension = filetype.guess(videoFP).extension
+    fExtension = "mp4"
     clip = VideoFileClip(videoFP)
     context={
         'videofile':singleVideo,
@@ -58,7 +57,6 @@ def display_Video(request, id):
         'endTime':str(clip.duration)
     }
     if request.method == "POST":
-        print("Inside POST")
         sTime = request.POST.get('price-min','0')
         eTime = request.POST.get('price-max','0')
         file_name = datetime.datetime.now().strftime('%Y-%m-%d_%H:%I:%S') +"."+str(fExtension)
@@ -67,12 +65,10 @@ def display_Video(request, id):
             os.mkdir(folder_path)
         file_path = os.path.join(folder_path,file_name)
         ffmpeg_extract_subclip(videoFP,float(sTime),float(eTime),targetname=file_path)
-        print(file_path)
         context['startTime']=sTime
         context['endTime']=eTime
         file_wrapper = FileWrapper(open(file_path, 'rb'))
         file_mimetype = 'video/mp4'
-        print(file_mimetype)
         response = HttpResponse(file_wrapper, content_type=file_mimetype )
         response['Content-Length'] = os.stat(file_path).st_size
         response['Content-Disposition'] = 'attachment; filename=%s' % (file_name)

@@ -1,0 +1,14 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background-color: #faf9f9;
+}
+
+.container-fluid{
+  height: 100%;
+}
+
+.my-navbar {
+  background-color: #070d59;
+}

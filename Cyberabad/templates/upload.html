@@ -1,16 +1,17 @@
 <html>
+{% extends 'base.html' %}
 <head>
 <meta charset="UTF-8">
 <title>Upload Videos</title>
 </head>
 <body>
-
+{% block content %}
 <h1>Video Uploader</h1>
 <form enctype="multipart/form-data" method="POST" action="">
 {% csrf_token %}
 {{ form.as_p }}
 <input type="submit" value="Upload"/>
 </form>
-
+{% endblock %}
 </body>
 </html>

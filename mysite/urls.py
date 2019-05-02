@@ -9,6 +9,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('', views.index , name='home'),
+    path('',views.HomePage.as_view(), name="home"),
     path('',include('Cyberabad.urls',namespace="Cyberabad")),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

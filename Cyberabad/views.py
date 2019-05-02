@@ -4,7 +4,7 @@ import datetime
 import filetype
 from wsgiref.util import FileWrapper
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
@@ -16,6 +16,8 @@ from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 from moviepy.editor import VideoFileClip
 
 def upload_Video(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/accounts/login')
     form= VideoForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         video_Saved = form.save()
@@ -35,6 +37,9 @@ def upload_Video(request):
     return render(request, 'upload.html', context)
 
 def all_Videos(request):
+    print("$$$$$$$$$   ", request.user.is_authenticated)
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/accounts/login')
     allVideos = Video.objects.all()
     paginator = Paginator(allVideos, 1) # Show 3 videos per page
 
@@ -46,6 +51,8 @@ def all_Videos(request):
     return render(request,'videos.html',context)
 
 def display_Video(request, id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/accounts/login')
     print("single video id  ",id)
     singleVideo = Video.objects.get(pk=id)
     videoFP = os.path.join(settings.BASE_DIR,'media',str(singleVideo.videofile))

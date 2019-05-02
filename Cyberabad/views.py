@@ -35,11 +35,13 @@ def upload_Video(request):
     return render(request, 'upload.html', context)
 
 def all_Videos(request):
-    print("check staff user status",request.user.is_staff)
     allVideos = Video.objects.all()
-    
+    paginator = Paginator(allVideos, 1) # Show 5 videos per page
+
+    page = request.GET.get('page')
+    page_videos = paginator.get_page(page)
     context = {
-        'allVideos':allVideos
+        'allVideos':page_videos,
     }
     return render(request,'videos.html',context)
 

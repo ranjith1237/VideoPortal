@@ -1,0 +1,36 @@
+
+<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
+{% comment %} <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> {% endcomment %}
+{% comment %} <script src="https://api.html5media.info/1.1.5/ht`ml5media.min.js"></script> {% endcomment %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+  <p><a href="{% url 'logout' %}">logout</a></p>
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">login</a>
+{% endif %}
+{% endblock %}
+
+
+<a href='/{{ videofile.id }}/'></a>
+<video width='400' height='600' loop controls='true'>
+<source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'>
+Your browser does not support the video tag.
+</video>
+
+
+<div data-role="main" class="ui-content">
+  <form method="POST" action="./">
+  {% csrf_token %}
+    <div data-role="rangeslider">
+      <label for="price-min">Price:</label>
+      <input type="range" name="price-min" id="price-min" value="{{ startTime }}" min="{{ startTime }}" max=" {{ endTime }} ">
+      <label for="price-max">Price:</label>
+      <input type="range" name="price-max" id="price-max" value="{{ endTime }}" min="{{ startTime }}" max="{{ endTime }}">
+    </div>
+      <input type="submit" data-inline="true" value="Download">
+  </form>
+</div>

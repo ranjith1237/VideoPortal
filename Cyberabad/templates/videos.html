@@ -2,6 +2,7 @@
 
 {% extends 'base.html' %}
 
+{% block content %}
 
 {% for videofile in allVideos %}
     <a href='/{{ videofile.id }}'>{{ videofile.name }}</a>
@@ -32,3 +33,4 @@
         {% endif %}
     </span>
 </div>
+{% endblock %}

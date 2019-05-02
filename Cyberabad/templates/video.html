@@ -5,6 +5,7 @@
 {% comment %} <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> {% endcomment %}
 {% comment %} <script src="https://api.html5media.info/1.1.5/ht`ml5media.min.js"></script> {% endcomment %}
 
+{% block content %}
 <a href='/{{ videofile.id }}/'></a>
 <video width='400' height='600' loop controls='true'>
 <source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'>
@@ -24,3 +25,4 @@ Your browser does not support the video tag.
       <input type="submit" data-inline="true" value="Download">
   </form>
 </div>
+{% endblock %}

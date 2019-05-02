@@ -7,5 +7,7 @@ class HomePage(TemplateView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return render(request,'home.html')
+            return HttpResponseRedirect('/all')
+        else:
+            return HttpResponseRedirect('/accounts/login')
         return super().get(request, *args, **kwargs)

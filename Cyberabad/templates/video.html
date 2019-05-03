@@ -1,11 +1,46 @@
 {% extends 'base.html' %}
 
+
+
+{% block content %}
+
 <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
 {% comment %} <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> {% endcomment %}
 {% comment %} <script src="https://api.html5media.info/1.1.5/ht`ml5media.min.js"></script> {% endcomment %}
 
-{% block content %}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.3/themes/hot-sneaks/jquery-ui.css" />
+	<script src="http://code.jquery.com/jquery-2.1.3.js"></script>
+	<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+       <script>
+        $(document).ready(function() {
+        $( "#mySlider" ).slider({
+          range: true,
+          min: {{ startTime }},
+          max: {{ endTime }},
+          values: [{{ startTime }} , {{ endTime }} ],
+          slide: function( event, ui ) {
+            $( "#price" ).val( "sec:" + ui.values[ 0 ] + " - sec:" + ui.values[ 1 ] );
+         }
+      });
+          
+      $( "#price" ).val( "sec:" + $( "#mySlider" ).slider( "values", 0 ) +
+              " - sec:" + $( "#mySlider" ).slider( "values", 1 ) );
+      
+      });
+
+      function myFunction(){
+        x=document.getElementById("price").value;
+        document.getElementById("kkk").value = document.getElementById("price").value;
+      }
+    </script>
+
+
+
+
+
+
+
 <div>
   <a href='/{{ videofile.id }}/'></a>
   <video width='600' height='400' loop controls='true'>
@@ -17,14 +52,15 @@
 
 <div data-role="main" class="ui-content">
   <form method="POST" action="./">
-  {% csrf_token %}
-    <div data-role="rangeslider">
-      <label for="price-min">Price:</label>
-      <input type="range" name="price-min" id="price-min" value="{{ startTime }}" min="{{ startTime }}" max=" {{ endTime }} ">
-      <label for="price-max">Price:</label>
-      <input type="range" name="price-max" id="price-max" value="{{ endTime }}" min="{{ startTime }}" max="{{ endTime }}">
-    </div>
-      <input type="submit" data-inline="true" class="btn btn-info" value="Download">
+      {% csrf_token %}
+      <p>
+        <label for="price" style="font-family:Verdana;">Time Range:</label>
+        <input type="text" id="price" style="border:0; color:#fa4b2a; font-weight:bold;">
+        <input type="hidden" id="kkk" name="timerange">
+      </p>
+     <div id="mySlider"></div>
+      <input type="submit" data-inline="true" class="btn btn-info" value="Download" onclick="myFunction()">
   </form>
 </div>
 {% endblock %}
+

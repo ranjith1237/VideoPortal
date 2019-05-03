@@ -37,7 +37,6 @@ def upload_Video(request):
     return render(request, 'upload.html', context)
 
 def all_Videos(request):
-    print("$$$$$$$$$   ", request.user.is_authenticated)
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/accounts/login')
     allVideos = Video.objects.all()
@@ -51,6 +50,7 @@ def all_Videos(request):
     return render(request,'videos.html',context)
 
 def display_Video(request, id):
+
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/accounts/login')
     print("single video id  ",id)
@@ -64,8 +64,10 @@ def display_Video(request, id):
         'endTime':str(clip.duration)
     }
     if request.method == "POST":
-        sTime = request.POST.get('price-min','0')
-        eTime = request.POST.get('price-max','0')
+        timerange = request.POST.get('timerange')
+        timerange = timerange.split("-")
+        sTime = timerange[0].split(":")[1]
+        eTime = timerange[1].split(":")[1]
         file_name = datetime.datetime.now().strftime('%Y-%m-%d_%H:%I:%S') +"."+str(fExtension)
         folder_path = os.path.join(settings.BASE_DIR,'media','data',str(request.user.id),'downloads')
         if not os.path.exists(folder_path):

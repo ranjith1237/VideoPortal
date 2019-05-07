@@ -6,3 +6,6 @@ media/
 
 # Ignore .pyc files
 *.pyc
+
+# Ignore settings.py file
+mysite/settings.py

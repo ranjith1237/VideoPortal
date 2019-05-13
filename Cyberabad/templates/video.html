@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 
-
-
 {% block content %}
 
 <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
@@ -36,17 +34,9 @@
     </script>
 
 
-
-
-
-
-
 <div>
   <a href='/{{ videofile.id }}/'></a>
-  <video width='600' height='400' loop controls='true'>
-  <source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'>
-  Your browser does not support the video tag.
-  </video>
+  <video width='600' height='400' id="video" loop controls='true'></video>
 </div>
 
 
@@ -62,5 +52,27 @@
       <input type="submit" data-inline="true" class="btn btn-info" value="Download" onclick="myFunction()">
   </form>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+        if(Hls.isSupported()) {
+          var video = document.getElementById('video');
+          var hls = new Hls();
+          hls.loadSource('{{ MEDIA_URL }}data/{{id}}/output.m3u8');
+          hls.attachMedia(video);
+          hls.on(Hls.Events.MANIFEST_PARSED,function() {
+            video.play();
+        });
+       }
+       // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+       // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
+       // This is using the built-in support of the plain video element, without using hls.js.
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = '{{ MEDIA_URL }}data/{{id}}/output.m3u8';
+          video.addEventListener('canplay',function() {
+            video.play();
+          });
+        }
+      </script>
 {% endblock %}
 

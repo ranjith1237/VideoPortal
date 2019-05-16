@@ -21,8 +21,27 @@
       <a class="navbar-brand" href="{% url 'home' %}"><font size="5" color= #abedd8><b>Video Portal</b></font></a>
         <ul class="nav justify-content-end">
           {% if user.is_authenticated %}
-              <li><a href="{% url 'Cyberabad:upload' %}" class="btn"><font size="4" color= #abedd8>Upload</font></a></li>
-              <li><a href="{% url 'logout' %}" class="btn"><font size="4" color= #abedd8>Log out</font></a></li>
+          <div class="topnav-centered">
+              <form class="form-inline">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><font size="4" color= #abedd8>Search</font></button>
+              </form>
+          </div>
+              {% if user.is_staff %}
+                <li><a href="{% url 'Cyberabad:upload' %}" class="btn"><font size="4" color= #abedd8>Upload</font></a></li>
+              {% endif %}
+              <li>
+                <div class="dropdown">
+                  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <font size="4" color= #abedd8>profile</font>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="#">{{user.username}}</a>
+                    <a href="{% url 'logout' %}" class="dropdown-item" href="#"><font size="4">Log out</font></a>
+                  </div>
+                </div>
+              </li>
+             <!-- <li><a href="{% url 'logout' %}" class="btn"><font size="4" color= #abedd8>Log out</font></a></li> -->
           {% else %}
                 <li><a href="{% url 'login' %}" class="btn"><font size="5" color= #abedd8>Log in</font></a></li>
                 <li><a href="{% url 'signup' %}" class="btn"><font size="5" color= #abedd8>Sign up</font></a></li>

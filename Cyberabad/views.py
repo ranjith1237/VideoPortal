@@ -11,15 +11,18 @@ from django.views.generic import TemplateView
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.core.paginator import Paginator
-from .models import Video
+from .models import Video,gps
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import VideoForm
 # ffmpeg tools
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 from moviepy.editor import VideoFileClip
-from .tasks import chunk_Video_data,generate_thumbnail
-from celery import chain
+# celery tasks
+from .tasks import chunk_Video_data,email,getLocations
+# Email
+from django.core.mail import send_mail
+from celery import group
 
 
 @login_required()
@@ -27,21 +30,18 @@ def upload_Video(request):
     form= VideoForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         video_Saved = form.save()
-        if request.user:
-            tempPath = os.path.join(settings.BASE_DIR,'media/data')
-            video_Saved = form.save()
-            thumbnail_path = os.path.join(tempPath,str(video_Saved.pk))
-            os.mkdir(thumbnail_path)
-            videoPath = os.path.join(settings.BASE_DIR,'media',str(video_Saved.videofile))
-            job = chain(chunk_Video_data(videoPath,thumbnail_path),
-                    generate_thumbnail(videoPath,thumbnail_path))
-            job.delay()
+        tempPath = os.path.join(settings.BASE_DIR,'media/data')
+        gpsData = os.path.join(settings.BASE_DIR,'media')
+        gps_filePath = os.path.join(gpsData,str(video_Saved.sensorfile))
+        thumbnail_path = os.path.join(tempPath,str(video_Saved.pk))
+        os.mkdir(thumbnail_path)
+        videoPath = os.path.join(settings.BASE_DIR,'media',str(video_Saved.videofile))
+        chunk_Video_data.delay(videoPath,thumbnail_path)
+        getLocations.delay(gps_filePath)
     context = {
         'form':form
     }
-    messages.success(request, 'Successfully uploaded video')
     return render(request, 'upload.html', context)
-
 
 @login_required()
 def all_Videos(request):
@@ -91,3 +91,4 @@ def display_Video(request, id):
         response['Content-Disposition'] = 'attachment; filename=%s' % (file_name)
         return response
     return render(request,'video.html',context)
+

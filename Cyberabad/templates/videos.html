@@ -3,15 +3,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-{% for videofile in allVideos %}
-    <a href='/{{ videofile.id }}'>{{ videofile.name }}</a>
-        <td>
-          <video  width='300' height='300' poster="{{ MEDIA_URL }}{{ videofile.routemaps }}" controls>
-            <source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'>
-            Your browser does not support the video tag.
-          </video>
-        </td>
+    <div class="container">
+        {% for videofile in allVideos %}
+            <a href='/{{ videofile.id }}'>{{ videofile.name }}</a>
+                <td>
+                <video  width='300' height='300' poster="{{ MEDIA_URL }}{{ videofile.routemaps }}" controls>
+                    <source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'>
+                    Your browser does not support the video tag.
+                </video>
+                </td>
+    </div>
 {% endfor %}
 <br><br>
 

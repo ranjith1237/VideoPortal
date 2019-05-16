@@ -1,18 +1,14 @@
-<html>
-    {% extends 'base.html' %}
-    {% load bootstrap3 %}
-    <head>
-        <meta charset="UTF-8">
-        <title>Upload Videos</title>
-    </head>
-    <body>
-        {% block content %}
-            <h1>Video Uploader</h1>
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+    {% block title %}Upload{% endblock %}
+    {% block content %}
+        <div class="container">
+            <h1>Upload</h1>
             <form enctype="multipart/form-data" method="POST" action=".">
                 {% csrf_token %}
                 {% bootstrap_form form %}
                 <input type="submit" class="btn btn-default btn-info" value="Upload"/>
             </form>
-        {% endblock %}
-    </body>
-</html>
+        </div>
+    {% endblock %}
+

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
+    'geoposition',
 ]
 
 
@@ -81,7 +82,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+# https://docs.djangoproject.com/en/2.2/ref//#databases
 
 DATABASES = {
     'default': {
@@ -105,8 +106,8 @@ CACHES = {
     }
 }
 
-BROKER_URL = 'amqp://[127.0.0.1]'
-CELERY_RESULT_BACKEND = 'amqp://[127.0.0.1]'
+BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+#CELERY_RESULT_BACKEND = "amqp"
 # Celery Data Format
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -181,3 +182,12 @@ LOGGING = {
         },
     },
 }
+
+GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyBqoWN9ZfV73W59oTm_WtqvX8Knc8qbJ1o'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'dinesh.iiith@gmail.com'
+EMAIL_HOST_PASSWORD = 'dineshmncgsKDCkjCAz'

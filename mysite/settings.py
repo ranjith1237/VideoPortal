@@ -185,6 +185,9 @@ LOGGING = {
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyBqoWN9ZfV73W59oTm_WtqvX8Knc8qbJ1o'
 
+TIME_ZONE = 'Asia/Kolkata'
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True

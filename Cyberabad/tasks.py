@@ -10,8 +10,6 @@ from .models import gps as GeoPosition
 import pytz
 
 
-
-
 @shared_task()
 def chunk_Video_data(videoPath,outputPath):
     cmd="ffmpeg -i "+videoPath+" -b:v 1M -g 60 -hls_time 100 -hls_list_size 0 -hls_segment_size 50000 "+outputPath+"/output.m3u8"
@@ -41,7 +39,7 @@ def gpsCoordinates(gps_filePath):
 
 
 def getTime(timestamp):
-	tz = pytz.timezone('Asia/Kolkata')
+	tz = pytz.timezone(settings.TIME_ZONE)
 	dt_object = datetime.fromtimestamp(timestamp)
 	return dt_object.astimezone(tz)
 

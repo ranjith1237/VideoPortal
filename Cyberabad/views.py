@@ -2,7 +2,10 @@ import subprocess
 import os
 import datetime
 import filetype
+import requests
+from requests.exceptions import HTTPError
 from django.core.cache import cache
+from django.http import JsonResponse
 from wsgiref.util import FileWrapper
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
@@ -92,3 +95,23 @@ def display_Video(request, id):
         return response
     return render(request,'video.html',context)
 
+
+@login_required()
+def rithish(request):
+    response=requests.get('http://10.4.16.53:9000/transfer_data/4')
+    if response.status_code==200:
+        print("working")
+        print(response.json())
+    print(response.text)
+    return HttpResponse("<h1>{{response.text}}</h1>")
+
+def sendMedia(request):
+    file_name = "output.mp4"
+    folder_path = os.path.join(settings.BASE_DIR,'media','data','downloads')
+    file_path = os.path.join(folder_path,file_name)
+    file_wrapper = FileWrapper(open(file_path, 'rb'))
+    file_mimetype = 'video/mp4'
+    response = HttpResponse(file_wrapper, content_type=file_mimetype )
+    response['Content-Length'] = os.stat(file_path).st_size
+    response['Content-Disposition'] = 'attachment; filename=%s' % (file_name)
+    return response

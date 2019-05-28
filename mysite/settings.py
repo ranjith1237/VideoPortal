@@ -25,7 +25,7 @@ SECRET_KEY = '6#v+e40m3&2jpy@wq4@96o264=s&9cm85m5fx%1lff$&l(%36_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["10.4.16.53"]
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap3',
     'geoposition',
+    'rest_framework',
 ]
 
 
@@ -87,9 +88,9 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'videodb',
-        'USER':'',
-        'PASSWORD':'',
+        'NAME': 'ranjith_reddy',
+        'USER':'ranjith_reddy',
+        'PASSWORD':'a98m43u',
         'HOST':'localhost',
         'PORT':'',
     }
@@ -105,8 +106,7 @@ CACHES = {
         }
     }
 }
-
-BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+BROKER_URL = 'amqp://ranjith_reddy:n388nc394@localhost:5672/ranjith_reddy'
 #CELERY_RESULT_BACKEND = "amqp"
 # Celery Data Format
 CELERY_ACCEPT_CONTENT = ['application/json']

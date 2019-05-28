@@ -19,5 +19,6 @@ class gps(models.Model):
     position = GeopositionField()
     frameStamp = models.DateTimeField(default=now)
     address    = models.CharField(max_length=1500)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
     def __str__(self):
         return str(self.position)+ " : "+ str(frameStamp)

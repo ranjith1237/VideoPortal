@@ -26,7 +26,8 @@ from .tasks import chunk_Video_data,email,getLocations
 # Email
 from django.core.mail import send_mail
 from celery import group
-
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 
 @login_required()
 def upload_Video(request):
@@ -40,7 +41,7 @@ def upload_Video(request):
         os.mkdir(thumbnail_path)
         videoPath = os.path.join(settings.BASE_DIR,'media',str(video_Saved.videofile))
         chunk_Video_data.delay(videoPath,thumbnail_path)
-        getLocations.delay(gps_filePath)
+        getLocations.delay(gps_filePath,video_Saved.pk)
     context = {
         'form':form
     }
@@ -96,22 +97,44 @@ def display_Video(request, id):
     return render(request,'video.html',context)
 
 
-@login_required()
 def rithish(request):
-    response=requests.get('http://10.4.16.53:9000/transfer_data/4')
+    payload={
+        'chunks':31,
+        'id':1
+    }
+    response=requests.post('http://10.2.40.44:9000/newVideo/',payload)
     if response.status_code==200:
         print("working")
         print(response.json())
     print(response.text)
     return HttpResponse("<h1>{{response.text}}</h1>")
 
+
+@csrf_exempt
+@api_view(['POST'])
 def sendMedia(request):
-    file_name = "output.mp4"
-    folder_path = os.path.join(settings.BASE_DIR,'media','data','downloads')
-    file_path = os.path.join(folder_path,file_name)
-    file_wrapper = FileWrapper(open(file_path, 'rb'))
-    file_mimetype = 'video/mp4'
-    response = HttpResponse(file_wrapper, content_type=file_mimetype )
-    response['Content-Length'] = os.stat(file_path).st_size
-    response['Content-Disposition'] = 'attachment; filename=%s' % (file_name)
-    return response
+    id = request.POST.get('id',1)
+    if request.method=='POST':
+        data=request.POST.get('data','gps')
+        if data=='gps':
+            singleVideo = Video.objects.get(pk=id)
+            file_name = str(singleVideo.sensorfile)
+            folder_path = os.path.join(settings.BASE_DIR,'media')
+            file_path = os.path.join(folder_path,file_name)
+            print("file path ",file_path)
+            file_wrapper = FileWrapper(open(file_path, 'rb'))
+            file_mimetype = 'text/plain'
+            response = HttpResponse(file_wrapper, content_type=file_mimetype )
+            response['Content-Length'] = os.stat(file_path).st_size
+            response['Content-Disposition'] = 'attachment; filename=%s' % (file_name)
+            return response
+        chunk = request.POST.get('chunk',0)
+        file_name='output'+str(chunk)+'.ts'
+        folder_path = os.path.join(settings.BASE_DIR,'media','data','downloads','ts_files')
+        file_path = os.path.join(folder_path,file_name)
+        file_wrapper = FileWrapper(open(file_path, 'rb'))
+        file_mimetype = 'video/ts'
+        response = HttpResponse(file_wrapper, content_type=file_mimetype )
+        response['Content-Length'] = os.stat(file_path).st_size
+        response['Content-Disposition'] = 'attachment; filename=%s' % (file_name)
+        return response

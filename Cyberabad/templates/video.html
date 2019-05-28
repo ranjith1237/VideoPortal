@@ -39,6 +39,7 @@
   <video width='600' height='400' id="video" loop controls='true'></video>
 </div>
 
+<div id="timestamp">TimeSatamp is</div>
 
 <div data-role="main" class="ui-content">
   <form method="POST" action="./">
@@ -70,6 +71,11 @@
             video.play();
           });
         }
+        var log_time = function(){
+		      timestamp.innerHTML = video.currentTime;
+        	window.setTimeout(log_time,1000)
+	    };
+	    log_time();
       </script>
 {% endblock %}
 

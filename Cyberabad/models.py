@@ -21,4 +21,4 @@ class gps(models.Model):
     address    = models.CharField(max_length=1500)
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
     def __str__(self):
-        return str(self.position)+ " : "+ str(frameStamp)
+        return str(self.position)+ " : "+ str(self.frameStamp)+ " : " + str(self.address)

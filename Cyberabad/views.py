@@ -63,6 +63,7 @@ def all_Videos(request):
 def display_Video(request, id):
     try:
         singleVideo = Video.objects.get(pk=id)
+        gpsData=gps.objects.filter(video=singleVideo).order_by('frameStamp')
     except ObjectDoesNotExist:
         messages.error(request, 'video doesnt exist')
         return HttpResponse("<h1>404 error</h1>")
@@ -72,6 +73,7 @@ def display_Video(request, id):
     context={
         'id':id,
         'videofile':singleVideo,
+        'gps':gpsData[0],
         'startTime':'0',
         'endTime':str(clip.duration)
     }
@@ -138,3 +140,15 @@ def sendMedia(request):
         response['Content-Length'] = os.stat(file_path).st_size
         response['Content-Disposition'] = 'attachment; filename=%s' % (file_name)
         return response
+
+
+@login_required()
+@api_view(['POST'])
+def getGPS(request):
+    gps_time=request.POST.get('time',1)
+    video_id=request.POST.get('id',1)
+    frame = float(gps_time)
+    singleVideo = Video.objects.get(pk=video_id)
+    gpsData=gps.objects.filter(video=singleVideo).order_by('frameStamp')
+    print(gpsData[int(frame)].position)
+    return JsonResponse({'position':str(gpsData[int(frame)].position)})

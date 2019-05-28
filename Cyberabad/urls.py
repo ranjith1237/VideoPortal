@@ -9,4 +9,5 @@ urlpatterns = [
     path('<int:id>/',views.display_Video,name='singleVideo'),
     path('rithish/',views.rithish,name='newVideo'),
     path('sendMedia/',views.sendMedia,name='sendMedia'),
+    path('location/',views.getGPS,name='location'),
 ]

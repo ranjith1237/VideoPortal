@@ -13,7 +13,7 @@ import pytz
 
 @shared_task()
 def chunk_Video_data(videoPath,outputPath):
-    cmd="ffmpeg -i "+videoPath+" -b:v 1M -g 60 -hls_time 100 -hls_list_size 0 -hls_segment_size 1000000 "+outputPath+"/output.m3u8"
+    cmd="ffmpeg -i "+videoPath+" -b:v 1M -g 60 -hls_time 100 -hls_list_size 0 -hls_segment_size 1000000 -acodec copy -vcodec copy "+outputPath+"/output.m3u8"
     subprocess.call(cmd,shell=True)
     clip = VideoFileClip(videoPath)
     clip.save_frame(outputPath+"/thumbnail.jpg",t=(clip.duration)/2)

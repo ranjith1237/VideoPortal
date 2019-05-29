@@ -150,5 +150,8 @@ def getGPS(request):
     frame = float(gps_time)
     singleVideo = Video.objects.get(pk=video_id)
     gpsData=gps.objects.filter(video=singleVideo).order_by('frameStamp')
-    print(gpsData[int(frame)].position)
-    return JsonResponse({'position':str(gpsData[int(frame)].position)})
+    print(gpsData[int(frame)].address)
+    return JsonResponse({
+                        'position':str(gpsData[int(frame)].position),
+                        'address':gpsData[int(frame)].address
+                        })

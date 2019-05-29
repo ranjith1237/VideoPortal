@@ -6,7 +6,39 @@
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
 {% comment %} <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> {% endcomment %}
 {% comment %} <script src="https://api.html5media.info/1.1.5/ht`ml5media.min.js"></script> {% endcomment %}
-
+<style>
+   .container{
+    margin-left:10px;
+   }
+   #video{
+    margin-top:20px;
+    margin-left:2px;
+    position:relative;
+    padding:5px;
+    height:400px;
+    width:400px;
+    border-style: solid;
+    border-color: blue;
+  }
+  #map {
+    position:absolute;
+    border-style:solid;
+    border-color:green;
+    top:100px;
+    left:800px;
+    height: 600px;
+    width: 600px;
+  }
+  #mySlider{
+    width:50%;
+  }
+  .ui-content{
+    position:absolute;
+    top:800px;
+    left:10px;
+    width:50%;
+  }
+</style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.3/themes/hot-sneaks/jquery-ui.css" />
 	<script src="http://code.jquery.com/jquery-2.1.3.js"></script>
 	<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
@@ -26,7 +58,6 @@
               " - sec:" + $( "#mySlider" ).slider( "values", 1 ) );
       
       });
-
       function myFunction(){
         x=document.getElementById("price").value;
         document.getElementById("kkk").value = document.getElementById("price").value;
@@ -36,11 +67,10 @@
 
 <div class="container">
   <a href='/{{ videofile.id }}/'></a>
-  <video width='600' height='400' id="video" loop controls='true'></video>
+  <video id="video" loop controls='true'></video>
 </div>
 
-<div id="gps">{{gps.position}}</div>
-<div id="timestamp">TimeSatamp is</div>
+<div id="map"></div>
 
 <div data-role="main" class="ui-content">
   <form method="POST" action="./">
@@ -54,7 +84,9 @@
       <input type="submit" data-inline="true" class="btn btn-info" value="Download" onclick="myFunction()">
   </form>
 </div>
-
+<div id="gps">{{gps.position}}</div>
+<div id="timestamp">TimeSatamp is</div>
+<input type="submit" id="submit">
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
         if(Hls.isSupported()) {
@@ -87,7 +119,71 @@
             dataType: "json",
         });
 	    };
-	    log_time();      
+	    log_time();
+       function initMap() {
+          var directionsService = new google.maps.DirectionsService;
+          var directionsDisplay = new google.maps.DirectionsRenderer;
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: {lat: 17.45, lng: 78.35}
+          });
+          directionsDisplay.setMap(map);
+          document.getElementById('submit').addEventListener('click', function() {
+            calculateAndDisplayRoute(directionsService, directionsDisplay);
+          });
+        }
+
+        function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+          var waypts = [];
+          var checkboxArray = document.getElementById('waypoints');
+          waypts=[
+              {
+                location: new google.maps.LatLng(17.4457933333,78.3511233333),
+                stopover: true
+              },
+              {
+                location: new google.maps.LatLng(17.4556966667,78.3408916667),
+                stopover: true
+              },
+              {
+                location: new google.maps.LatLng( 17.464695,78.3415233333),
+                stopover: true
+              },
+              {
+                location: new google.maps.LatLng(17.4614266667,78.3524316667),
+                stopover: true
+              },
+              {
+                location: new google.maps.LatLng(17.4562166667,78.3625766667),
+                stopover: true
+              },
+              {
+                location: new google.maps.LatLng(17.4530583333,78.36379),
+                stopover: true
+              }
+          ]
+
+          directionsService.route({
+            origin: {
+                location: new google.maps.LatLng(17.446725,78.3500283333)
+            },
+            destination: {
+                location: new google.maps.LatLng(17.4529416667,78.36379)
+            },
+            waypoints: waypts,
+            optimizeWaypoints: true,
+            travelMode: 'DRIVING'
+          }, function(response, status) {
+            if (status === 'OK') {
+              directionsDisplay.setDirections(response);
+            } else {
+              window.alert('Directions request failed due to ' + status);
+            }
+          });
+        }
       </script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqoWN9ZfV73W59oTm_WtqvX8Knc8qbJ1o&callback=initMap">
+    </script>
 {% endblock %}
 

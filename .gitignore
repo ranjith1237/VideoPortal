@@ -5,6 +5,9 @@
 media/
 
 # Ignore .pyc files
+Cyberabad/__pycache__/
+mysite/__pycache__/
+accounts/__pycache__/
 *.pyc
 
 # Ignore settings.py file

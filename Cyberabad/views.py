@@ -68,12 +68,14 @@ def display_Video(request, id):
         messages.error(request, 'video doesnt exist')
         return HttpResponse("<h1>404 error</h1>")
     videoFP = os.path.join(settings.BASE_DIR,'media',str(singleVideo.videofile))
+    latlng = [[float(gpsPt.position.latitude),float(gpsPt.position.longitude)] for gpsPt in gpsData]
     fExtension = "mp4"
     clip = VideoFileClip(videoFP)
     context={
         'id':id,
         'videofile':singleVideo,
-        'gps':gpsData[0],
+        'gps':[(gpsData[0].position.latitude,gpsData[0].position.longitude)],
+        'gpsPts':latlng,
         'startTime':'0',
         'endTime':str(clip.duration)
     }
@@ -150,8 +152,9 @@ def getGPS(request):
     frame = float(gps_time)
     singleVideo = Video.objects.get(pk=video_id)
     gpsData=gps.objects.filter(video=singleVideo).order_by('frameStamp')
-    print(gpsData[int(frame)].address)
+    latlng = [[float(gpsPt.position.latitude),float(gpsPt.position.longitude)] for gpsPt in gpsData]
     return JsonResponse({
-                        'position':str(gpsData[int(frame)].position),
-                        'address':gpsData[int(frame)].address
-                        })
+                'gpsPts':latlng,
+                'position':str(gpsData[int(frame)].position),
+                'address':gpsData[int(frame)].address
+            })

@@ -118,6 +118,7 @@
 
         var log_time = function(){
 		      timestamp.innerHTML = video.currentTime;
+          document.getElementById('mapsubmit').click();
         	window.setTimeout(log_time,2000)
           $.ajax({
           type:"POST",

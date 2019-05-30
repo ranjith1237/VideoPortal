@@ -183,6 +183,7 @@ LOGGING = {
     },
 }
 
+
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyBqoWN9ZfV73W59oTm_WtqvX8Knc8qbJ1o'
 
 TIME_ZONE = 'Asia/Kolkata'

@@ -2,7 +2,7 @@ import os
 from django.db import models
 from django.utils.timezone import now
 from geoposition.fields import GeopositionField
-
+from django.contrib.auth.models import User
 
 
 class Video(models.Model):
@@ -12,6 +12,7 @@ class Video(models.Model):
     videofile = models.FileField(upload_to='data/', null=False, verbose_name="Video")
     sensorfile = models.FileField(upload_to="gps/",null=True,verbose_name="Gps sensor(.txt)")
     routemaps = models.FileField(upload_to="routes/",null=True,verbose_name="Route map (.png,.jpeg)")
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     def __str__(self):
         return self.name + ": " + str(self.videofile)
 

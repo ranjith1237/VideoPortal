@@ -9,6 +9,8 @@
 <style>
    .container{
     margin-left:10px;
+    height:600px;
+    width:600px;
    }
    #video{
     margin-top:20px;
@@ -34,9 +36,12 @@
   }
   .ui-content{
     position:absolute;
-    top:800px;
+    top:600px;
     left:10px;
     width:50%;
+  }
+  #mapsubmit{
+    display:none;
   }
 </style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.3/themes/hot-sneaks/jquery-ui.css" />
@@ -84,7 +89,6 @@
       <input type="submit" data-inline="true" class="btn btn-info" value="Download" onclick="myFunction()">
   </form>
 </div>
-<div id="timestamp">TimeSatamp is</div>
 <input type="submit" id="mapsubmit">
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
@@ -103,7 +107,7 @@
             video.play();
           });
         }
-        function initMap() {
+        /*function initMap() {
           var directionsService = new google.maps.DirectionsService;
           var directionsDisplay = new google.maps.DirectionsRenderer;
           map = new google.maps.Map(document.getElementById('map'), {
@@ -114,12 +118,11 @@
           document.getElementById('mapsubmit').addEventListener('click', function() {
             calculateAndDisplayRoute(directionsService, directionsDisplay);
           });
-        }
+        }*/
 
         var log_time = function(){
-		      timestamp.innerHTML = video.currentTime;
-          document.getElementById('mapsubmit').click();
         	window.setTimeout(log_time,2000)
+          /*document.getElementById('mapsubmit').click();
           $.ajax({
           type:"POST",
           data: {
@@ -130,10 +133,9 @@
           url: 'http://10.4.16.53:8080/location/',
           error: {"message": "error"},
           success: function(response, status, jqXHR) {
-                        $("#gps").text(response.position);
                     },
             dataType: "json",
-        });
+        });*/
 	    };
 	    log_time();
        
@@ -168,7 +170,7 @@
       }
       </script>
     <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqoWN9ZfV73W59oTm_WtqvX8Knc8qbJ1o&callback=initMap">
+       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqoWN9ZfV73W59oTm_WtqvX8Knc8qbJ1o&callback=initMap">
     </script>
 {% endblock %}
 

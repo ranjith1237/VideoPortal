@@ -4,9 +4,10 @@
 
 {% block content %}
 
-<ul>
+<br><br>
+<tr>
 {% for videofile in pageVideos %}
-    <li>
+    <td>
         {% for row in videofile %}
             <a href='/{{ row.id }}'>
                 <video  width='330' height='280' poster="{{ MEDIA_URL }}{{ row.routemaps }}" controls>
@@ -14,9 +15,10 @@
                 </video>
             </a>
         {% endfor %}
-    </li>
+    </td>
+    <br><br>
 {% endfor %}
-</ul>
+</tr>
 
 <div class="pagination">
     <span class="step-links">

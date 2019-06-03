@@ -37,6 +37,9 @@
                   </a>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" href="#">{{user.username}}</a>
+                    {% if user.is_staff %}
+                      <a href="{% url 'accounts:uploaded' %}" class="dropdown-item">Video Uploaded</a>
+                    {% endif %}
                     <a href="{% url 'logout' %}" class="dropdown-item" href="#"><font size="4">Log out</font></a>
                   </div>
                 </div>
@@ -44,7 +47,7 @@
              <!-- <li><a href="{% url 'logout' %}" class="btn"><font size="4" color= #abedd8>Log out</font></a></li> -->
           {% else %}
                 <li><a href="{% url 'login' %}" class="btn"><font size="5" color= #abedd8>Log in</font></a></li>
-                <li><a href="{% url 'signup' %}" class="btn"><font size="5" color= #abedd8>Sign up</font></a></li>
+                <li><a href="{% url 'accounts:signup' %}" class="btn"><font size="5" color= #abedd8>Sign up</font></a></li>
           {% endif %}
         </ul>
     </div>

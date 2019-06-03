@@ -31,9 +31,11 @@ from rest_framework.decorators import api_view
 
 @login_required()
 def upload_Video(request):
-    form= VideoForm(request.POST or None, request.FILES or None)
+    form=VideoForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         video_Saved = form.save()
+        video_Saved.user = request.user
+        video_Saved.save()
         tempPath = os.path.join(settings.BASE_DIR,'media/data')
         gpsData = os.path.join(settings.BASE_DIR,'media')
         gps_filePath = os.path.join(gpsData,str(video_Saved.sensorfile))

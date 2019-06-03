@@ -1,3 +1,4 @@
+import os
 import subprocess
 import requests
 import json
@@ -11,12 +12,36 @@ from .models import gps as GeoPosition
 import pytz
 
 
+def violation(id):
+    payload={
+		'id':id,
+		'data':'video'
+	}
+    video_path = os.path.join(settings.BASE_DIR,'media','data',str(payload['id']))
+    chunks=0
+    for li in os.listdir(video_path):
+        if li.endswith(".ts"):
+            chunks+=1
+    payload['chunks']=chunks
+    try:
+        print("########")
+        response=requests.post('http://10.4.16.53:9000/newVideo/',payload)
+        if response.status_code==200:
+            print("working")
+        print(response.text)
+        return "working"
+    except:
+        print("failure in connecting to violation portal")
+    return "failed"
+
 @shared_task()
-def chunk_Video_data(videoPath,outputPath):
-    cmd="ffmpeg -i "+videoPath+" -b:v 1M -g 60 -hls_time 100 -hls_list_size 0 -hls_segment_size 1000000 -acodec copy -vcodec copy "+outputPath+"/output.m3u8"
+def chunk_Video_data(videoPath,outputPath,id):
+    cmd="ffmpeg -i "+videoPath+" -profile:v baseline -level 3.0  -start_number 0 -hls_list_size 0 -f hls -vcodec copy "+outputPath+"/output.m3u8"
     subprocess.call(cmd,shell=True)
     clip = VideoFileClip(videoPath)
     clip.save_frame(outputPath+"/thumbnail.jpg",t=(clip.duration)/2)
+    print("done")
+    violation(id)
 
 @shared_task()
 def email():
@@ -25,8 +50,6 @@ def email():
     email_from = settings.EMAIL_HOST_USER
     recipient_list = ['ranjithreddy1061995@gmail.com']
     send_mail( subject, message, email_from, recipient_list )
-
-
 
 def gpsCoordinates(gps_filePath):
 	gpsList = []
@@ -38,7 +61,6 @@ def gpsCoordinates(gps_filePath):
 			gpsList.append({'lat':features_row[6],"lng":features_row[7],"timeStamp":features_row[0][:10]})
 	return gpsList
 
-
 def getTime(timestamp):
 	tz = pytz.timezone(settings.TIME_ZONE)
 	dt_object = datetime.fromtimestamp(timestamp)
@@ -46,8 +68,8 @@ def getTime(timestamp):
 
 @shared_task()
 def getLocations(gps_filePath,id):
-	gpsList = gpsCoordinates(gps_filePath)
-	for gps in gpsList:
+	'''gpsList = gpsCoordinates(gps_filePath)
+		for gps in gpsList:
 		latlng=gps["lat"]+","+gps["lng"]
 		dateTime = getTime(int(gps["timeStamp"]))
 		url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latlng+"&key="+settings.GEOPOSITION_GOOGLE_MAPS_API_KEY
@@ -58,4 +80,12 @@ def getLocations(gps_filePath,id):
 		videoInst = Video.objects.get(pk=id)
 		p=GeoPosition(position=(latlng),frameStamp=strDT,address=formatted_address)
 		p.video=videoInst
-		p.save()
+		p.save()'''
+	payload={
+		'id':id,
+		'data':'gps'
+	}
+	try:
+		requests.post('http://10.4.16.53:9000/newVideo/',payload)
+	except:
+		print("not working")

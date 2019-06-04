@@ -28,6 +28,11 @@ from django.core.mail import send_mail
 from celery import group
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 
 @login_required()
 def upload_Video(request):
@@ -67,19 +72,20 @@ def all_Videos(request):
 def display_Video(request, id):
     try:
         singleVideo = Video.objects.get(pk=id)
-        gpsData=gps.objects.filter(video=singleVideo).order_by('frameStamp')
+        #gpsData=gps.objects.filter(video=singleVideo).order_by('frameStamp')
     except ObjectDoesNotExist:
+        logger.debug("unable to access the video with id:",id)
         messages.error(request, 'video doesnt exist')
         return HttpResponse("<h1>404 error</h1>")
     videoFP = os.path.join(settings.BASE_DIR,'media',str(singleVideo.videofile))
-    latlng = [[float(gpsPt.position.latitude),float(gpsPt.position.longitude)] for gpsPt in gpsData]
+    #latlng = [[float(gpsPt.position.latitude),float(gpsPt.position.longitude)] for gpsPt in gpsData]
     fExtension = "mp4"
     clip = VideoFileClip(videoFP)
     context={
         'id':id,
         'videofile':singleVideo,
-        'gps':[(gpsData[0].position.latitude,gpsData[0].position.longitude)],
-        'gpsPts':latlng,
+    #    'gps':[(gpsData[0].position.latitude,gpsData[0].position.longitude)],
+    #    'gpsPts':latlng,
         'startTime':'0',
         'endTime':str(clip.duration)
     }
@@ -135,7 +141,7 @@ def sendMedia(request):
             file_name = str(singleVideo.sensorfile)
             folder_path = os.path.join(settings.BASE_DIR,'media')
             file_path = os.path.join(folder_path,file_name)
-            print("file path ",file_path)
+            logger.debug("file path ",file_path)
             file_wrapper = FileWrapper(open(file_path, 'rb'))
             file_mimetype = 'text/plain'
             response = HttpResponse(file_wrapper, content_type=file_mimetype )

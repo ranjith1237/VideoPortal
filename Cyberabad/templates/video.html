@@ -3,7 +3,7 @@
 {% block content %}
 
 <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
-<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 {% comment %} <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> {% endcomment %}
 {% comment %} <script src="https://api.html5media.info/1.1.5/ht`ml5media.min.js"></script> {% endcomment %}
 <style>
@@ -42,6 +42,11 @@
   }
   #mapsubmit{
     display:none;
+  }
+  .btn-outline-danger{
+    position:absolute;
+    top:15px;
+    left:200px;
   }
 </style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.3/themes/hot-sneaks/jquery-ui.css" />
@@ -86,7 +91,7 @@
         <input type="hidden" id="kkk" name="timerange">
       </p>
      <div id="mySlider"></div>
-      <input type="submit" data-inline="true" class="btn btn-info" value="Download" onclick="myFunction()">
+      <input type="submit" data-inline="true" class="btn btn-info" value="Download Clip" onclick="myFunction()">
   </form>
 </div>
 <input type="submit" id="mapsubmit">
@@ -142,7 +147,7 @@
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         var currentTime = Math.floor(video.currentTime);
         var waypts = [];
-        var gpsPts = {{gpsPts}};
+        //var gpsPts = {{gpsPts}};
         var midPts = gpsPts.slice(1,currentTime)
         for(var i=0;i<midPts.length;i+=60){
           waypts.push({

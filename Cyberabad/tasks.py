@@ -10,6 +10,9 @@ from datetime import datetime
 from .models import Video,gps
 from .models import gps as GeoPosition
 import pytz
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def violation(id):
@@ -24,23 +27,21 @@ def violation(id):
             chunks+=1
     payload['chunks']=chunks
     try:
-        print("########")
         response=requests.post('http://10.4.16.53:9000/newVideo/',payload)
         if response.status_code==200:
-            print("working")
-        print(response.text)
+            logger.debug("working")
+        logger.debug(response.text)
         return "working"
     except:
-        print("failure in connecting to violation portal")
+        logger.exception("failure in connecting to violation portal")
     return "failed"
 
 @shared_task()
 def chunk_Video_data(videoPath,outputPath,id):
-    cmd="ffmpeg -i "+videoPath+" -profile:v baseline -level 3.0  -start_number 0 -hls_list_size 0 -f hls -vcodec copy "+outputPath+"/output.m3u8"
+    cmd="ffmpeg -i "+videoPath+" -profile:v baseline -level 3.0 -s 840x560 -start_number 0 -hls_list_size 0 -f hls "+outputPath+"/output.m3u8"
     subprocess.call(cmd,shell=True)
     clip = VideoFileClip(videoPath)
     clip.save_frame(outputPath+"/thumbnail.jpg",t=(clip.duration)/2)
-    print("done")
     violation(id)
 
 @shared_task()
@@ -88,4 +89,4 @@ def getLocations(gps_filePath,id):
 	try:
 		requests.post('http://10.4.16.53:9000/newVideo/',payload)
 	except:
-		print("not working")
+		logger.exception("not working")

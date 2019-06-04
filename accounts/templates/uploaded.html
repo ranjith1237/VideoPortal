@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}My Videos{% endblock %}
+
+
+{% block content %}
+<style>
+    .container{
+        left-margin:600px;
+    }
+    .btn-outline-danger{
+        position:relative;
+        left:900px;
+        margin-top:-150px;
+    }
+    .video{
+        border-style: solid;
+        border-color: blue;
+    }
+</style>
+<br><br>
+<tr>
+{% for videofile in allVideos %}
+    <td>
+        <div class="container">
+            <a href='/{{ videofile.id }}'>
+                <video  width='400' height='200' class="video" poster="{{ MEDIA_URL }}{{ videofile.routemaps }}" controls>
+                    <!-- <source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'> -->
+                </video>
+                <p>{{videofile.name}}</p>
+            </a>
+            </div>
+            <button type="button" class="btn btn-outline-danger" id="{{ videofile.id }}">Delete Video</button>
+    </td>
+    <hr>
+{% endfor %}
+</tr>
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if allVideos.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ allVideos.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ allVideos.number }} of {{ allVideos.paginator.num_pages }}.
+        </span>
+
+        {% if allVideos.has_next %}
+            <a href="?page={{ allVideos.next_page_number }}">next</a>
+            <a href="?page={{ allVideos.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+<script>
+    $('button').click(function(){
+        var id = this.id;
+        $.ajax({
+            type:"POST",
+            data: {
+                "id":id,
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            },
+            url: 'http://10.4.16.53:8080/accounts/video/',
+            error: {"message": "error"},
+            success: function(response, status, jqXHR) {
+                    if(response.success){
+                        $('.alert').alert()
+                        location.reload();
+                    }
+                },
+            dataType: "json",
+        });
+    });
+</script>
+{% endblock %}

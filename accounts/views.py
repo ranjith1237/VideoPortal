@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views import generic
-from Cyberabad.models import Video
+from Cyberabad.models import Video,gps
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
@@ -20,7 +20,6 @@ class SignUp(generic.CreateView):
     form_class = forms.UserCreateForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
-
 
 @login_required()
 def uploadedVideos(request):
@@ -40,6 +39,9 @@ def uploadedVideos(request):
 def removeMedia(request):
     id=request.POST.get("id")
     videoInst=Video.objects.get(pk=id)
+    gpsInst=gps.objects.filter(video=videoInst)
+    if len(gpsInst) > 0:
+        gpsInst.delete()
     videoFile = videoInst.videofile
     sensorFile = videoInst.sensorfile
     routemap = videoInst.routemaps
@@ -66,7 +68,7 @@ def removeMedia(request):
         logger.exception("folder is not present at ",chunksFolderPath)
 
     return JsonResponse({
-                "id":id,
-                'success':True,
-                'message':"successfully deleted "+videoInst.name,
+            "id":id,
+            'success':True,
+            'message':"successfully deleted "+videoInst.name,
         })

@@ -37,6 +37,7 @@
                   </a>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" href="#">{{user.username}}</a>
+                    <a href="{% url 'password_change' %}" class="dropdown-item">change password</a>
                     {% if user.is_staff %}
                       <a href="{% url 'accounts:uploaded' %}" class="dropdown-item">Uploaded</a>
                     {% endif %}

@@ -7,6 +7,7 @@ urlpatterns = [
     path('upload/',views.upload_Video,name='upload'),
     path('all/',views.all_Videos,name='allVideos'),
     path('<int:id>/',views.display_Video,name='singleVideo'),
+    path('<int:id>/postcomment/',views.post_Comment,name="postComment"),
     path('rithish/',views.rithish,name='newVideo'),
     path('sendMedia/',views.sendMedia,name='sendMedia'),
     path('location/',views.getGPS,name='location'),

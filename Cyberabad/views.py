@@ -14,10 +14,10 @@ from django.views.generic import TemplateView
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.core.paginator import Paginator
-from .models import Video,gps
+from .models import Video,gps,comments
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import VideoForm
+from .forms import VideoForm,commentForm
 # ffmpeg tools
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 from moviepy.editor import VideoFileClip
@@ -55,6 +55,20 @@ def upload_Video(request):
     return render(request, 'upload.html', context)
 
 @login_required()
+@api_view(['POST'])
+def post_Comment(request,id):
+    form = commentForm(request.POST or None)
+    if form.is_valid():
+        comment_saved = form.save()
+        comment_saved.user = request.user
+        video = Video.objects.get(pk=id)
+        comment_saved.video = video
+        comment_saved.save()
+    return JsonResponse({
+        "success":True
+    })
+
+@login_required()
 def all_Videos(request):
     allVideos = Video.objects.all()
     paginator = Paginator(allVideos, 8) 
@@ -73,6 +87,7 @@ def display_Video(request, id):
     try:
         singleVideo = Video.objects.get(pk=id)
         #gpsData=gps.objects.filter(video=singleVideo).order_by('frameStamp')
+        videoComments = comments.objects.filter(video=singleVideo).order_by('commented_on')
     except ObjectDoesNotExist:
         logger.debug("unable to access the video with id:",id)
         messages.error(request, 'video doesnt exist')
@@ -87,7 +102,8 @@ def display_Video(request, id):
     #    'gps':[(gpsData[0].position.latitude,gpsData[0].position.longitude)],
     #    'gpsPts':latlng,
         'startTime':'0',
-        'endTime':str(clip.duration)
+        'endTime':str(clip.duration),
+        'comments':videoComments
     }
     if request.method == "POST":
         timerange = request.POST.get('timerange')

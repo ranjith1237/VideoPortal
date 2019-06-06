@@ -13,21 +13,6 @@
 </style>
 
 
-<br><br>
-<tr>
-{% for videofile in pageVideos %}
-    <td>
-        {% for row in videofile %}
-            <a href='/{{ row.id }}'>
-                <video poster="{{ MEDIA_URL }}{{ row.routemaps }}" class="video" controls>
-                    <!-- <source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'> -->
-                </video>
-            </a>
-        {% endfor %}
-    </td>
-    <br><br>
-{% endfor %}
-</tr>
 
 <div class="pagination">
     <span class="step-links">
@@ -46,4 +31,22 @@
         {% endif %}
     </span>
 </div>
+
+<br><br>
+<tr>
+{% for videofile in pageVideos %}
+    <td>
+        {% for row in videofile %}
+            <a href='/{{ row.id }}'>
+                <video poster="{{ MEDIA_URL }}{{ row.routemaps }}" class="video" controls>
+                    <!-- <source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'> -->
+                </video>
+            </a>
+        {% endfor %}
+    </td>
+    <br><br>
+{% endfor %}
+</tr>
+
+
 {% endblock %}

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load bootstrap3 %}
 {% block content %}
 
 <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
@@ -7,7 +7,7 @@
 {% comment %} <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> {% endcomment %}
 {% comment %} <script src="https://api.html5media.info/1.1.5/ht`ml5media.min.js"></script> {% endcomment %}
 <style>
-   .container{
+   .videoContainer{
     margin-left:10px;
     height:600px;
     width:600px;
@@ -43,11 +43,16 @@
   #mapsubmit{
     display:none;
   }
-  .btn-outline-danger{
+  .commentContainer{
     position:absolute;
-    top:15px;
-    left:200px;
-  }
+    top: 900px;
+    left:20px;
+   }
+   .displaycomments{
+     position:absolute;
+     top:1050px;
+     left:40px;
+   }
 </style>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.3/themes/hot-sneaks/jquery-ui.css" />
 	<script src="http://code.jquery.com/jquery-2.1.3.js"></script>
@@ -75,7 +80,7 @@
     </script>
 
 
-<div class="container">
+<div class="container videoContainer">
   <a href='/{{ videofile.id }}/'></a>
   <video id="video" loop controls='true'></video>
 </div>
@@ -94,7 +99,33 @@
       <input type="submit" data-inline="true" class="btn btn-info" value="Download Clip" onclick="myFunction()">
   </form>
 </div>
+
+
+<div class="container commentContainer">
+  <form>
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="comment">Reply:</label>
+      <input type="text" class="form-control" id="comment">
+    </div>
+    <input type="submit" class="btn btn-info" value="add comment" id="commentbtn">
+  </form>
+</div>
+
+<div class="container displaycomments">
+  <h3>Comments:</h3>
+  <br>
+  {% for comment in comments %}
+  <div class="col-md-12 col-md-offset-0">
+    <div class="forumText forumMax"><p>{{comment.comment}}</p></div><p class="forumTagline">
+    <span class="forumName">{{comment.user}} <small>()</small></span> - <span class="text-muted">{{comment.commented_on}}</span>
+    <hr>
+  </div>
+  {% endfor %}
+</div>
+
 <input type="submit" id="mapsubmit">
+
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
         if(Hls.isSupported()) {
@@ -173,8 +204,26 @@
           }
         });
       }
+      $(document).ready(function() {
+        $("#commentbtn").click(function(event){
+          event.preventDefault();
+          $.ajax({
+            type:"POST",
+            data:{
+                "comment":$("#comment").val(),
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            },
+            url: "http://10.4.16.53:8080/{{ videofile.id }}/postcomment/",
+            error: {"message": "error"},
+            success: function(response, status, jqXHR) {
+                  console.log("sucess");
+                },
+            dataType: "json",
+          });
+        });
+      });
       </script>
-    <script async defer
+    <!-- <script async defer
        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqoWN9ZfV73W59oTm_WtqvX8Knc8qbJ1o&callback=initMap">
-    </script>
+    </script> -->
 {% endblock %}

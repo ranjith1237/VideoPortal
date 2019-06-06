@@ -23,3 +23,11 @@ class gps(models.Model):
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
     def __str__(self):
         return str(self.position)+ " : "+ str(self.frameStamp)+ " : " + str(self.address)
+
+class comments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE,null=True)
+    commented_on = models.DateTimeField(default=now)
+    comment = models.CharField(max_length=5000)
+    def __str__(self):
+        return self.content+":"+str(self.commented_on)

@@ -38,7 +38,7 @@ def violation(id):
 
 @shared_task()
 def chunk_Video_data(videoPath,outputPath,id):
-    cmd="ffmpeg -i "+videoPath+" -profile:v baseline -level 3.0 -s 840x560 -start_number 0 -hls_list_size 0 -f hls "+outputPath+"/output.m3u8"
+    cmd="ffmpeg -i "+videoPath+" -profile:v baseline -level 3.0 -s 1920x1080 -start_number 0 -hls_list_size 0 -f hls "+outputPath+"/output.m3u8"
     subprocess.call(cmd,shell=True)
     clip = VideoFileClip(videoPath)
     clip.save_frame(outputPath+"/thumbnail.jpg",t=(clip.duration)/2)
@@ -69,19 +69,31 @@ def getTime(timestamp):
 
 @shared_task()
 def getLocations(gps_filePath,id):
-	'''gpsList = gpsCoordinates(gps_filePath)
-		for gps in gpsList:
-		latlng=gps["lat"]+","+gps["lng"]
-		dateTime = getTime(int(gps["timeStamp"]))
-		url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latlng+"&key="+settings.GEOPOSITION_GOOGLE_MAPS_API_KEY
-		r=requests.get(url)
-		addrs = json.loads(r.text)
-		formatted_address =  addrs["results"][0]["formatted_address"]
+	http_proxy  = "http://proxy.iiit.ac.in:8080"
+	https_proxy = "https://proxy.iiit.ac.in:8080"
+	proxyDict = {
+              "http"  : http_proxy, 
+              "https" : https_proxy
+            }
+	gpsList = gpsCoordinates(gps_filePath)
+	videoInst = Video.objects.get(pk=id)
+	for i in range(0,len(gpsList)):
+		dateTime = getTime(int(gpsList[i]["timeStamp"]))
+		latlng=gpsList[i]["lat"]+","+gpsList[i]["lng"]
+		if i%15==0:
+			url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latlng+"&key="+settings.GEOPOSITION_GOOGLE_MAPS_API_KEY
+			r=requests.get(url,proxies=proxyDict)
+			addrs = json.loads(r.text)
+			formatted_address =  addrs["results"][0]["formatted_address"]
+		else:
+			latestgps = gps.objects.filter(video=videoInst).order_by('-pk')
+			print("latestgps====> ",latestgps)
+			formatted_address = latestgps[0].address
 		strDT=str(dateTime)
-		videoInst = Video.objects.get(pk=id)
+		
 		p=GeoPosition(position=(latlng),frameStamp=strDT,address=formatted_address)
 		p.video=videoInst
-		p.save()'''
+		p.save()
 	payload={
 		'id':id,
 		'data':'gps'

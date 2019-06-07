@@ -32,8 +32,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
-
 @login_required()
 def upload_Video(request):
     form=VideoForm(request.POST or None, request.FILES or None)
@@ -86,21 +84,21 @@ def all_Videos(request):
 def display_Video(request, id):
     try:
         singleVideo = Video.objects.get(pk=id)
-        #gpsData=gps.objects.filter(video=singleVideo).order_by('frameStamp')
+        gpsData=gps.objects.filter(video=singleVideo).order_by('frameStamp')
         videoComments = comments.objects.filter(video=singleVideo).order_by('commented_on')
     except ObjectDoesNotExist:
         logger.debug("unable to access the video with id:",id)
         messages.error(request, 'video doesnt exist')
         return HttpResponse("<h1>404 error</h1>")
     videoFP = os.path.join(settings.BASE_DIR,'media',str(singleVideo.videofile))
-    #latlng = [[float(gpsPt.position.latitude),float(gpsPt.position.longitude)] for gpsPt in gpsData]
+    latlng = [[float(gpsPt.position.latitude),float(gpsPt.position.longitude)] for gpsPt in gpsData]
     fExtension = "mp4"
     clip = VideoFileClip(videoFP)
     context={
         'id':id,
         'videofile':singleVideo,
-    #    'gps':[(gpsData[0].position.latitude,gpsData[0].position.longitude)],
-    #    'gpsPts':latlng,
+        'gps':[(gpsData[0].position.latitude,gpsData[0].position.longitude)],
+        'gpsPts':latlng,
         'startTime':'0',
         'endTime':str(clip.duration),
         'comments':videoComments

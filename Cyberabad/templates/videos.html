@@ -12,7 +12,13 @@
     }
 </style>
 
-
+<div class="topnav-centered">
+    <form class="form-inline">
+    <input class="form-control mr-sm-2 start" type="search" placeholder="start" aria-label="Search">
+    <input class="form-control mr-sm-2 end" type="search" placeholder="end" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><font size="4" color= #abedd8>Search</font></button>
+    </form>
+</div>
 
 <div class="pagination">
     <span class="step-links">
@@ -47,6 +53,29 @@
     <br><br>
 {% endfor %}
 </tr>
+<script>
+    $(document).ready(function() {
+        $(".btn-outline-success").click(function(event){
+        event.preventDefault();
+        var start=$(".start").val();
+        var end=$(".end").val();
+          $.ajax({
+            type:"GET",
+            data:{
+                
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            },
+            url: "http://10.4.16.53:8080/allvideos?start="+start+"&end="+end,
+            error: {"message": "error"},
+            success: function(response, status, jqXHR) {
+                  console.log("sucess");
+                },
+            dataType: "json",
+          });
+        });
+      });
+</script>
+
 
 
 {% endblock %}

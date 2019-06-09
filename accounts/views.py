@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views import generic
-from Cyberabad.models import Video,gps
+from Cyberabad.models import Video,gps,comments
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
@@ -40,8 +40,11 @@ def removeMedia(request):
     id=request.POST.get("id")
     videoInst=Video.objects.get(pk=id)
     gpsInst=gps.objects.filter(video=videoInst)
+    commentsInst = comments.objects.filter(video=videoInst)
     if len(gpsInst) > 0:
         gpsInst.delete()
+    if len(commentsInst) > 0:
+        commentsInst.delete()
     videoFile = videoInst.videofile
     sensorFile = videoInst.sensorfile
     routemap = videoInst.routemaps

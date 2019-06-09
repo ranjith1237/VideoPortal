@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from wsgiref.util import FileWrapper
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
+from django.db.models import Q
 from django.db.models import ObjectDoesNotExist
 from django.views.generic import TemplateView
 from django.core.files.storage import FileSystemStorage
@@ -63,13 +64,35 @@ def post_Comment(request,id):
         comment_saved.video = video
         comment_saved.save()
     return JsonResponse({
-        "success":True
+        "success":True,
+        "message":"added comment successfully"
     })
 
 @login_required()
+@api_view(['PUT'])
+def edit_comment(request,id):
+    pass
+
+@login_required()
+@api_view(['DELETE'])
+def remove_comment(request,id):
+    commentInst = comments.object.get(pk=id)
+    commentInst.delete()
+    return JsonResponse({
+        "success":True,
+        "message":"Deleted Sucessfully"
+    })
+
+@login_required()
+@api_view(['GET'])
 def all_Videos(request):
+    start = request.GET.get('start',None)
+    end = request.GET.get('end',None)
+    if start and end:
+        startPoints = gps.objects.filter(Q(address__icontains=start))
+        print("start points ",startPoints,len(startPoints))
     allVideos = Video.objects.all()
-    paginator = Paginator(allVideos, 8) 
+    paginator = Paginator(allVideos, 8)
 
     page = request.GET.get('page')
     page_videos = paginator.get_page(page)

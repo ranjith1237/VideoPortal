@@ -61,11 +61,7 @@
         var end=$(".end").val();
           $.ajax({
             type:"GET",
-            data:{
-                
-                "csrfmiddlewaretoken": "{{ csrf_token }}"
-            },
-            url: "http://10.4.16.53:8080/allvideos?start="+start+"&end="+end,
+            url: "http://10.4.16.53:8080/all?start="+start+"&end="+end,
             error: {"message": "error"},
             success: function(response, status, jqXHR) {
                   console.log("sucess");

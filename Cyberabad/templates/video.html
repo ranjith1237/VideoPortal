@@ -119,6 +119,7 @@
   <div class="col-md-12 col-md-offset-0">
     <div class="forumText forumMax"><p>{{comment.comment}}</p></div><p class="forumTagline">
     <span class="forumName">{{comment.user}} <small>()</small></span> - <span class="text-muted">{{comment.commented_on}}</span>
+    <button type="button" class="btn btn-outline-danger" id="{{ comment.id }}">Delete Video</button>
     <hr>
   </div>
   {% endfor %}
@@ -222,6 +223,26 @@
           });
         });
       });
+
+      $('.btn-outline-danger').click(function(){
+        var id = this.id;
+        $.ajax({
+            type:"POST",
+            data: {
+                "id":id,
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            },
+            url: 'http://10.4.16.53:8080/accounts/video/',
+            error: {"message": "error"},
+            success: function(response, status, jqXHR) {
+                    if(response.success){
+                        $('.alert').alert()
+                        location.reload();
+                    }
+                },
+            dataType: "json",
+        });
+    });
       </script>
     <script async defer
        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqoWN9ZfV73W59oTm_WtqvX8Knc8qbJ1o&callback=initMap">

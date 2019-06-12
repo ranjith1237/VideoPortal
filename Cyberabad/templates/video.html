@@ -222,27 +222,25 @@
             dataType: "json",
           });
         });
-      });
-
-      $('.btn-outline-danger').click(function(){
-        var id = this.id;
-        $.ajax({
-            type:"POST",
-            data: {
-                "id":id,
-                "csrfmiddlewaretoken": "{{ csrf_token }}"
-            },
-            url: 'http://10.4.16.53:8080/accounts/video/',
-            error: {"message": "error"},
-            success: function(response, status, jqXHR) {
-                    if(response.success){
-                        $('.alert').alert()
-                        location.reload();
-                    }
-                },
-            dataType: "json",
+        $('.btn-outline-danger').click(function(){
+          var id = this.id;
+          $.ajax({
+              type:"POST",
+              data: {
+                  "id":id,
+                  "csrfmiddlewaretoken": "{{ csrf_token }}"
+              },
+              url: 'http://10.4.16.53:8080/'+id+'/removecomment/',
+              error: {"message": "error"},
+              success: function(response, status, jqXHR) {
+                      if(response.success){
+                          location.reload();
+                      }
+                  },
+              dataType: "json",
+          });
         });
-    });
+      });
       </script>
     <script async defer
        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqoWN9ZfV73W59oTm_WtqvX8Knc8qbJ1o&callback=initMap">

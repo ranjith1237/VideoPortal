@@ -1,14 +1,20 @@
+from __future__ import absolute_import, unicode_literals
 import os
 import subprocess
 import requests
 import json
 from celery import shared_task
+from celery import task
 from moviepy.editor import VideoFileClip
-from django.core.mail import send_mail
+from django.core.mail import send_mail,EmailMultiAlternatives,get_connection
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.conf import settings
 from datetime import datetime
 from .models import Video,gps
 from .models import gps as GeoPosition
+from celery.decorators import periodic_task
+from datetime import timedelta
 import pytz
 import logging
 
@@ -102,3 +108,15 @@ def getLocations(gps_filePath,id):
 		requests.post('http://10.4.16.53:9000/newVideo/',payload)
 	except:
 		logger.exception("not working")
+
+@periodic_task(run_every=timedelta(minutes=1))
+def send_periodic_email():
+	subject, from_email, to = 'Video Capture Update', settings.EMAIL_HOST_USER, 'ranjithreddy1061995@gmail.com'
+	allVideos = Video.objects.all()
+	html_content = render_to_string('mail_template.html', {'allVideos':allVideos}) # render with dynamic value
+	print(html_content)
+	text_content = strip_tags(html_content) # Strip the html tag. So people can see the pure text at least.
+	# create the email, and attach the HTML version as well.
+	msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+	msg.attach_alternative(html_content, "text/html")
+	msg.send()

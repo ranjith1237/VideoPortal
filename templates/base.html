@@ -16,7 +16,7 @@
   </head>
 </head>
 <body>
-  <nav class="navbar my-navbar" role="navigation" id="navbar">
+  <nav class="navbar my-navbar" role="navigation" id="navbar" style="height:80px; top:0">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'home' %}"><font size="5" color= #abedd8><b>Video Portal</b></font></a>
         <ul class="nav justify-content-end">
@@ -51,7 +51,7 @@
     {% block content %}
     {% endblock %}
   </div>
-  <footer class="footer">
+  <footer class="footer" style="bottom:0">
     <div class="container" style="border-top: 1pt solid rgba(0, 0, 0, 0.1); text-align: center;">
       <span class="text-muted">
         &copy; Center for Visual Information Technology (CVIT), IIIT Hyderabad.

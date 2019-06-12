@@ -1,0 +1,47 @@
+<html>
+{% block content %}
+    <style>
+        table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
+
+        td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        }
+
+        tr:nth-child(even) {
+        background-color: #dddddd;
+        }
+    </style>
+    <h3>Video Capture Update</h3>
+    <p>Please find below the details of the video capture for last 6 months</p>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Video link</th>
+            <th>Capture Time</th>
+            <th>Uploaded Time</th>
+        </tr>
+        {% for video in allVideos %}
+            <tr>
+                <td>
+                    {{ video.name }}
+                </td>
+                <td>
+                    <a href="http://10.4.16.53:8080/{{video.pk}}">link</a>
+                </td>
+                <td>
+                    {{ video.captured_time }}
+                </td>
+                <td>
+                    {{ video.uploaded_on }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endblock %}
+</html>

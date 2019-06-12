@@ -74,9 +74,9 @@ def edit_comment(request,id):
     pass
 
 @login_required()
-@api_view(['DELETE'])
+@api_view(['POST'])
 def remove_comment(request,id):
-    commentInst = comments.object.get(pk=id)
+    commentInst = comments.objects.get(pk=id)
     commentInst.delete()
     return JsonResponse({
         "success":True,

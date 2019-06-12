@@ -111,12 +111,13 @@ def getLocations(gps_filePath,id):
 
 @periodic_task(run_every=timedelta(minutes=1))
 def send_periodic_email():
-	subject, from_email, to = 'Video Capture Update', settings.EMAIL_HOST_USER, 'ranjithreddy1061995@gmail.com'
+	with open('./Cyberabad/data/recipients_users.json') as f:
+		other_users=json.load(f)
+		recipients=other_users["recipients"]
+	subject, from_email, to = '[test email] Video Capture Update', settings.EMAIL_HOST_USER, 'ranjithreddy1061995@gmail.com'
 	allVideos = Video.objects.all()
-	html_content = render_to_string('mail_template.html', {'allVideos':allVideos}) # render with dynamic value
-	print(html_content)
-	text_content = strip_tags(html_content) # Strip the html tag. So people can see the pure text at least.
-	# create the email, and attach the HTML version as well.
-	msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+	html_content = render_to_string('mail_template.html', {'allVideos':allVideos})
+	text_content = strip_tags(html_content)
+	msg = EmailMultiAlternatives(subject, text_content, from_email, [to],cc=recipients)
 	msg.attach_alternative(html_content, "text/html")
 	msg.send()

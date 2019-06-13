@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap4 %}
 {% block content %}
 
 <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
@@ -151,6 +151,11 @@
             zoom: 15,
             center: {lat: 17.45, lng: 78.35}
           });
+          google.maps.event.addListener(map, 'click', function(event) {
+            var lat = event.latLng.lat();
+            var lng = event.latLng.lng();
+            console.log(lat,lng);
+          });
           directionsDisplay.setMap(map);
           document.getElementById('mapsubmit').addEventListener('click', function() {
             calculateAndDisplayRoute(directionsService, directionsDisplay);
@@ -159,20 +164,22 @@
 
         var log_time = function(){
         	window.setTimeout(log_time,2000)
-          document.getElementById('mapsubmit').click();
-          $.ajax({
-          type:"POST",
-          data: {
-                'time': video.currentTime,
-                'id':{{id}}, 
-                "csrfmiddlewaretoken": "{{ csrf_token }}"
-          },
-          url: 'http://10.4.16.53:8080/location/',
-          error: {"message": "error"},
-          success: function(response, status, jqXHR) {
-                    },
-            dataType: "json",
-        });
+          if(!video.paused){
+            document.getElementById('mapsubmit').click();
+            $.ajax({
+            type:"POST",
+            data: {
+                  'time': video.currentTime,
+                  'id':{{id}}, 
+                  "csrfmiddlewaretoken": "{{ csrf_token }}"
+            },
+            url: 'http://10.4.16.53:8080/location/',
+            error: {"message": "error"},
+            success: function(response, status, jqXHR) {
+                      },
+              dataType: "json",
+          });
+        }
 	    };
 	    log_time();
        

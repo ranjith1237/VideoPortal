@@ -16,37 +16,54 @@
   </head>
 </head>
 <body>
-  <nav class="navbar my-navbar" role="navigation" id="navbar" style="height:80px; top:0">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'home' %}"><font size="5" color= #abedd8><b>Video Portal</b></font></a>
-        <ul class="nav justify-content-end">
-          {% if user.is_authenticated %}
-              {% if user.is_staff %}
-                <li><a href="{% url 'Cyberabad:upload' %}" class="btn"><font size="4" color= #abedd8>Upload</font></a></li>
-              {% endif %}
-              <li>
-                <div class="dropdown">
-                  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <font size="4" color= #abedd8>profile</font>
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a class="dropdown-item" href="#">{{user.username | title}}</a>
-                    <a href="{% url 'password_change' %}" class="dropdown-item">Update Password</a>
-                    {% if user.is_staff %}
-                      <a href="{% url 'accounts:uploaded' %}" class="dropdown-item">Uploaded Videos</a>
-                    {% endif %}
-                    <a href="{% url 'logout' %}" class="dropdown-item" href="#"><font size="4">Log out</font></a>
-                  </div>
+  <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
+  <a class="navbar-brand" href="{% url 'home' %}">Video Portal</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  {% if user.is_authenticated %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <form class="form-inline my-2 my-lg-0 ml-auto">
+          <input class="form-control mr-sm-2" type="search" placeholder="Enter Area..." aria-label="Search" id="areaSearch">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        <ul class="navbar-nav ml-md-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+            </li>
+            {% if user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'Cyberabad:upload' %}">upload</a>
+                </li>
+            {% endif %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Profile
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Ranjith</a>
+                {% if user.is_staff %}
+                    <a class="dropdown-item" href="{% url 'accounts:uploaded' %}">uploaded videos</a>
+                {% endif %}
+                <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
+                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                 </div>
-              </li>
-             <!-- <li><a href="{% url 'logout' %}" class="btn"><font size="4" color= #abedd8>Log out</font></a></li> -->
-          {% else %}
-                <li><a href="{% url 'login' %}" class="btn"><font size="5" color= #abedd8>Log in</font></a></li>
-                <li><a href="{% url 'accounts:signup' %}" class="btn"><font size="5" color= #abedd8>Sign up</font></a></li>
-          {% endif %}
+            </li>
         </ul>
     </div>
-  </nav>
+   {% else %}
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-md-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'login' %}">Login <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:signup' %}">Register</a>
+                </li>
+            </ul>
+        </div>
+   {% endif %} 
+</nav>
   <div class="container-fluid">
     {% block content %}
     {% endblock %}

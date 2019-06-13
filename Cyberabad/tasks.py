@@ -15,6 +15,7 @@ from .models import Video,gps
 from .models import gps as GeoPosition
 from celery.decorators import periodic_task
 from datetime import timedelta
+from celery.schedules import crontab
 import pytz
 import logging
 
@@ -109,7 +110,7 @@ def getLocations(gps_filePath,id):
 	except:
 		logger.exception("not working")
 
-@periodic_task(run_every=timedelta(minutes=1))
+@periodic_task(run_every=crontab(hour=5, minute=30))
 def send_periodic_email():
 	with open('./Cyberabad/data/recipients_users.json') as f:
 		other_users=json.load(f)

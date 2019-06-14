@@ -32,7 +32,7 @@
 {% for videofile in pageVideos %}
     <td>
         {% for row in videofile %}
-            <a href='/{{ row.id }}'>
+            <a href='/{{ row.id }}' style="margin:1.2rem">
                 <video poster="{{ MEDIA_URL }}{{ row.routemaps }}" class="video" controls>
                     <!-- <source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'> -->
                 </video>

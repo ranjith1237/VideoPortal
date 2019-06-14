@@ -119,7 +119,9 @@
   <div class="col-md-12 col-md-offset-0">
     <div class="forumText forumMax"><p>{{comment.comment}}</p></div><p class="forumTagline">
     <span class="forumName">{{comment.user}} <small>()</small></span> - <span class="text-muted">{{comment.commented_on}}</span>
-    <button type="button" class="btn btn-outline-danger" id="{{ comment.id }}">Delete Video</button>
+    {% if comment.user == user %}
+      <button type="button" class="btn btn-outline-danger" id="{{ comment.id }}">Delete</button>
+    {% endif %}
     <hr>
   </div>
   {% endfor %}

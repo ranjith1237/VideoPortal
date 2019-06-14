@@ -41,7 +41,7 @@
                 Profile
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Ranjith</a>
+                <a class="dropdown-item" href="#">{{user}}</a>
                 {% if user.is_staff %}
                     <a class="dropdown-item" href="{% url 'accounts:uploaded' %}">uploaded videos</a>
                 {% endif %}

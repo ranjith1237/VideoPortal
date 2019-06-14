@@ -7,6 +7,10 @@
         border-style: solid;
         border-color: blue;
     }
+    .searchform{
+        position:absolute;
+        margin-left:500px;
+    }
 </style>
 
 <div class="pagination">
@@ -26,11 +30,18 @@
         {% endif %}
     </span>
 </div>
-
-<br><br>
-<tr>
+<div class="searchform">
+    <form class="form-inline my-2 my-lg-0 ml-auto">
+        <input class="form-control mr-sm-2" type="search" placeholder="Enter Area..." aria-label="Search" id="areaSearch">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+</div>
+<br>
+<br>
+<br>
+<tr class="allvideos">
 {% for videofile in pageVideos %}
-    <td>
+    <td class="videorow">
         {% for row in videofile %}
             <a href='/{{ row.id }}' style="margin:1.2rem">
                 <video poster="{{ MEDIA_URL }}{{ row.routemaps }}" class="video" controls>
@@ -46,19 +57,11 @@
     $(document).ready(function() {
         $(".btn-outline-success").click(function(event){
         event.preventDefault();
-        var start=$(".areaSearch").val();
-        var end=$(".areaSearch").val();
-          $.ajax({
-            type:"GET",
-            url: "http://10.4.16.53:8080/all?start="+start+"&end="+end,
-            error: {"message": "error"},
-            success: function(response, status, jqXHR) {
-                  console.log("sucess");
-                },
-            dataType: "json",
-          });
-        });
+        var start=$("#areaSearch").val();
+        var end=$("#areaSearch").val();
+        location.replace(window.location.href+"?start="+start+"&end="+end);
       });
+    });
 </script>
 
 

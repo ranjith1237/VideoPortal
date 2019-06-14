@@ -87,13 +87,17 @@ def remove_comment(request,id):
 @api_view(['GET'])
 def all_Videos(request):
     start = request.GET.get('start',None)
+    print("start ",start)
     end = request.GET.get('end',None)
     if start and end:
-        startPoints = gps.objects.filter(Q(address__icontains=start))
-        print("start points ",startPoints,len(startPoints))
-    allVideos = Video.objects.all()
+        startPoints = gps.objects.filter(Q(address__icontains=start)).distinct('video_id')
+        distinctPoints=[]
+        for point in startPoints:
+            distinctPoints.append(point.video_id)
+        allVideos = Video.objects.filter(id__in=distinctPoints)
+    else:
+        allVideos = Video.objects.all()
     paginator = Paginator(allVideos, 8)
-
     page = request.GET.get('page')
     page_videos = paginator.get_page(page)
     pageVideos = [page_videos[x:x+4] for x in range(0, len(page_videos), 4)]

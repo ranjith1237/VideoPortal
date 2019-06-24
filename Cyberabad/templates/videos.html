@@ -43,7 +43,7 @@
 {% for videofile in pageVideos %}
     <td class="videorow">
         {% for row in videofile %}
-            <a href='/{{ row.id }}' style="margin:1.2rem">
+            <a href='/{{ row.id }}' style="margin:1.2rem" id={{videofile.id}} class="videolink">
                 <video poster="{{ MEDIA_URL }}{{ row.routemaps }}" class="video" controls>
                     <!-- <source src='{{ MEDIA_URL }}{{ videofile.videofile }}' type='video/mp4'> -->
                 </video>
@@ -59,8 +59,24 @@
         event.preventDefault();
         var start=$("#areaSearch").val();
         var end=$("#areaSearch").val();
-        window.location="?start="+start+"&end="+end;
+        if(start){
+            window.location="?start="+start+"&end="+end;
+        }
       });
+      $(".videolink").click(function(){
+          var params = decodeURI(window.location.search)
+            .replace('?', '')
+            .split('&')
+            .map(param => param.split('='))
+            .reduce((values, [ key, value ]) => {
+                values[ key ] = value
+                return values
+            }, {})
+        });
+        var start=params.start;
+        var end=params.end;
+        var id = this.id
+        window.location="/"+id+"/?start="+start+"&end="+end;
     });
 </script>
 

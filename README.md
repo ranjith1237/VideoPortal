@@ -1,2 +1,2 @@
 # VideoPortal
-Video Portal of road data collection
+Video Portal for Cyberabad Data Capture

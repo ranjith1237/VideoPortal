@@ -146,7 +146,7 @@
             video.play();
           });
         }
-        function initMap() {
+        /*function initMap() {
           var directionsService = new google.maps.DirectionsService;
           var directionsDisplay = new google.maps.DirectionsRenderer;
           map = new google.maps.Map(document.getElementById('map'), {
@@ -162,10 +162,39 @@
           document.getElementById('mapsubmit').addEventListener('click', function() {
             calculateAndDisplayRoute(directionsService, directionsDisplay);
           });
-        }
+        }*/
+        function initMap() {
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: {lat: 17.45, lng: 78.35},
+            mapTypeId: 'terrain'
+          });
+
+          flightPlanCoordinates = [];
+          
+          document.getElementById('mapsubmit').addEventListener('click', function() {
+            var currentTime = Math.floor(video.currentTime);
+            var gpsPts = {{gpsPts}};
+            flightPlanCoordinates = [{'lat':gpsPts[0][0],'lng':gpsPts[0][1]}];
+            var midPts = gpsPts.slice(1,currentTime)
+            for(var i=0;i<midPts.length;i+=1){
+              flightPlanCoordinates.push({'lat':midPts[i][0],'lng':midPts[i][1]});
+            }
+            flightPlanCoordinates.push({'lat':gpsPts[currentTime][0],'lng':gpsPts[currentTime][1]});
+            var flightPath = new google.maps.Polyline({
+            path: flightPlanCoordinates,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+          });
+          flightPath.setMap(map);
+        });  
+      }
+
 
         var log_time = function(){
-        	window.setTimeout(log_time,4000)
+        	window.setTimeout(log_time,1000)
           if(!video.paused){
             document.getElementById('mapsubmit').click();
             $.ajax({

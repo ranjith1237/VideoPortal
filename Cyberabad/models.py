@@ -10,7 +10,7 @@ class Video(models.Model):
     captured_time = models.DateTimeField(default=now,null=False, verbose_name="Captured Time(YYYY-MM-DD HH:MM:SS)")
     uploaded_on = models.DateTimeField(default=now)
     videofile = models.FileField(upload_to='data/', null=False, verbose_name="Video")
-    sensorfile = models.FileField(upload_to="gps/",null=True,verbose_name="Gps sensor(.txt)")
+    sensorfile = models.FileField(upload_to="gps/",null=True,verbose_name="Gps sensor(.json)")
     routemaps = models.FileField(upload_to="routes/",null=True,verbose_name="Route map (.png,.jpeg)")
     user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     def __str__(self):

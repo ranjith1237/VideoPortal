@@ -61,12 +61,25 @@ def email():
 
 def gpsCoordinates(gps_filePath):
 	gpsList = []
-	with open(gps_filePath) as textfile:
-		lines = textfile.readlines()
-		lines=lines[1:]
-		for line in lines:
-			features_row = line.split(',')
-			gpsList.append({'lat':features_row[6],"lng":features_row[7],"timeStamp":features_row[0][:10]})
+	if gps_filePath.endswith('.txt'):	# old format of collecting the data
+		with open(gps_filePath) as textfile:
+			lines = textfile.readlines()
+			lines=lines[1:]
+			for line in lines:
+				features_row = line.split(',')
+				gpsList.append({'lat':features_row[6],"lng":features_row[7],"timeStamp":features_row[0][:10]})
+	elif gps_filePath.endswith('.json'):
+		with open(gps_filePath) as f:
+			data = json.load(f)
+			gpsPts = data["data"]
+			for i in range(0,len(gpsPts)):
+				stamp = gpsPts[i]['header']["stamp"]
+				timeStamp = float(str(stamp['secs'])+"."+str(stamp['nsecs']))
+				gpsList.append({
+					'lat':str(gpsPts[i]["latitude"]),
+					'lng':str(gpsPts[i]["longitude"]),
+					'timeStamp':timeStamp
+				})
 	return gpsList
 
 def getTime(timestamp):
@@ -79,7 +92,7 @@ def getLocations(gps_filePath,id):
 	http_proxy  = "http://proxy.iiit.ac.in:8080"
 	https_proxy = "https://proxy.iiit.ac.in:8080"
 	proxyDict = {
-              "http"  : http_proxy, 
+              "http"  : http_proxy,
               "https" : https_proxy
             }
 	gpsList = gpsCoordinates(gps_filePath)
@@ -110,12 +123,12 @@ def getLocations(gps_filePath,id):
 	except:
 		logger.exception("not working")
 
-@periodic_task(run_every=crontab(hour=5, minute=30))
+@periodic_task(run_every=crontab(hour=22, minute=28))
 def send_periodic_email():
 	with open('./Cyberabad/data/recipients_users.json') as f:
 		other_users=json.load(f)
 		recipients=other_users["recipients"]
-	subject, from_email, to = '[test email] Video Capture Update', settings.EMAIL_HOST_USER, 'ranjithreddy1061995@gmail.com'
+	subject, from_email, to = '[auto portal] Video Capture Update', settings.EMAIL_HOST_USER, 'ranjithreddy1061995@gmail.com'
 	allVideos = Video.objects.all()
 	html_content = render_to_string('mail_template.html', {'allVideos':allVideos})
 	text_content = strip_tags(html_content)

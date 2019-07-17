@@ -46,8 +46,8 @@ def upload_Video(request):
         thumbnail_path = os.path.join(tempPath,str(video_Saved.pk))
         os.mkdir(thumbnail_path)
         videoPath = os.path.join(settings.BASE_DIR,'media',str(video_Saved.videofile))
-        chunk_Video_data.delay(videoPath,thumbnail_path,video_Saved.pk)
         getLocations.delay(gps_filePath,video_Saved.pk)
+        chunk_Video_data.delay(videoPath,thumbnail_path,video_Saved.pk)
     context = {
         'form':form
     }
@@ -87,7 +87,6 @@ def remove_comment(request,id):
 @api_view(['GET'])
 def all_Videos(request):
     start = request.GET.get('start',None)
-    print("start ",start)
     end = request.GET.get('end',None)
     if start and end:
         startPoints = gps.objects.filter(Q(address__icontains=start)).distinct('video_id')

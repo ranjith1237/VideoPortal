@@ -123,12 +123,12 @@ def getLocations(gps_filePath,id):
 	except:
 		logger.exception("not working")
 
-@periodic_task(run_every=crontab(hour=22, minute=28))
+@periodic_task(run_every=crontab(hour=10, minute=40))
 def send_periodic_email():
 	with open('./Cyberabad/data/recipients_users.json') as f:
 		other_users=json.load(f)
 		recipients=other_users["recipients"]
-	subject, from_email, to = '[auto portal] Video Capture Update', settings.EMAIL_HOST_USER, 'ranjithreddy1061995@gmail.com'
+	subject, from_email, to = '[auto portal] Video Capture Update', settings.EMAIL_HOST_USER, 'jawahar@iiit.ac.in'
 	allVideos = Video.objects.all()
 	html_content = render_to_string('mail_template.html', {'allVideos':allVideos})
 	text_content = strip_tags(html_content)
